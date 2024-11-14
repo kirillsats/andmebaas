@@ -13,5 +13,6 @@ namespace Andmebaas
         public string Nimetus { get; set; }
         public int Kogus { get; set; }
         public float Hind { get; set; }
+        public string Pilt { get; set; }
     }
 }

@@ -4,16 +4,18 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.XPath;
 
 namespace Andmebaas
 {
     public partial class Form1 : Form
     {
-        SqlConnection conn = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Andmebas;Integrated Security=True");
+        SqlConnection conn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\opilane\source\repos\Andmebaas\Andmebas.mdf;Integrated Security=True");
 
         SqlCommand cmd;
         SqlDataAdapter adapter;
@@ -38,14 +40,6 @@ namespace Andmebaas
        
 
 
-
-
-
-
-
-
-
-
         private void Form1_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'andmebasDataSet.Toode' table. You can move, or remove it, as needed.
@@ -65,10 +59,11 @@ namespace Andmebaas
                 try
                 {
                     conn.Open();
-                    cmd = new SqlCommand("INSERT INTO Toode(Nimetus,Kogus,Hind) VALUES (@toode, @kogus,@hind)", conn);
+                    cmd = new SqlCommand("INSERT INTO Toode(Nimetus,Kogus,Hind, Pilt) VALUES (@toode, @kogus,@hind, @pilt)", conn);
                     cmd.Parameters.AddWithValue("@toode", NimetusBox.Text);
                     cmd.Parameters.AddWithValue("@kogus", KogusBox.Text);
                     cmd.Parameters.AddWithValue("@hind", HindBox.Text);
+                    //cmd.Parameters.AddWithValue("@pilt", NimetusBox.Text+extension);
 
                     cmd.ExecuteNonQuery();
 
@@ -122,5 +117,43 @@ namespace Andmebaas
             }
 
         }
+        int ID = 0;
+        private void dataGridView1_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            ID = (int)dataGridView1.Rows[e.RowIndex].Cells["ID"].Value;
+            NimetusBox.Text = dataGridView1.Rows[e.RowIndex].Cells["Nimetus"].Value.ToString();
+            KogusBox.Text = dataGridView1.Rows[e.RowIndex].Cells["Kogus"].Value.ToString();
+            HindBox.Text = dataGridView1.Rows[e.RowIndex].Cells["Hind"].Value.ToString();
+        }
+        OpenFileDialog open;
+        SaveFileDialog save;
+        private void Otsipilt_Click(object sender, EventArgs e)
+        {
+            open = new OpenFileDialog();
+            open.InitialDirectory = @"C:\Users\opilane\Pictures\";
+            open.Multiselect = false;
+            open.Filter = "Images Files(*.jpeg;*.png;*.bmp;*jpg)|*.jpeg;*.png;*.bmp;*jpg";
+            FileInfo opefile = new FileInfo(@"C:\Users\opilane\Pictures\"+open.FileName);
+            if (open.ShowDialog() == DialogResult.OK && NimetusBox.Text != null)
+            {
+                save = new SaveFileDialog();
+                save.InitialDirectory = Path.GetFullPath(@"..\..\..}Pildid");
+                string extension = Path.GetExtension(open.FileName);
+                save.FileName = NimetusBox.Text + extension;
+                save.Filter = "Images" + Path.GetExtension(open.FileName) + "|" + Path.GetExtension(open.FileName);
+                if (save.ShowDialog() == DialogResult.OK && NimetusBox != null)
+                {
+                    File.Copy(open.FileName, save.FileName);
+                    Otsipilt.Image = Image.FromFile(save.FileName);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Puudub toode nimetus või ei ole Cancel vajutavad");
+            }
+        }
+
     }
+
+
 }

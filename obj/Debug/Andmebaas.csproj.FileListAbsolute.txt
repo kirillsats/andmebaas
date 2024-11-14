@@ -8,3 +8,5 @@ C:\Users\opilane\source\repos\Andmebaas\obj\Debug\Andmebaas.csproj.GenerateResou
 C:\Users\opilane\source\repos\Andmebaas\obj\Debug\Andmebaas.csproj.CoreCompileInputs.cache
 C:\Users\opilane\source\repos\Andmebaas\obj\Debug\Andmebaas.exe
 C:\Users\opilane\source\repos\Andmebaas\obj\Debug\Andmebaas.pdb
+C:\Users\opilane\source\repos\Andmebaas\bin\Debug\Andmebas.mdf
+C:\Users\opilane\source\repos\Andmebaas\bin\Debug\Andmebas_log.ldf
